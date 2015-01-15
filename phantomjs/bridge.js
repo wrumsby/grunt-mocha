@@ -10,10 +10,21 @@
 /*global mocha:true, alert:true, window:true */
 
 (function() {
+    // If bridge is injected into a page that contains a library like
+    // Prototype 1.5, standard JSON methods don't work properly. Rely on that
+    // library's `toJSON` implementation.
+    function stringify(array) {
+        if (array.toJSON) {
+          return array.toJSON();
+        } else {
+          return JSON.stringify(array);
+        }
+    }
+
     // Send messages to the parent phantom.js process via alert! Good times!!
     function sendMessage() {
       var args = [].slice.call(arguments);
-      alert(JSON.stringify(args));
+      alert(stringify(args));
     }
 
     // Create a listener who'll bubble events from Phantomjs to Grunt
